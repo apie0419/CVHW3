@@ -24,8 +24,10 @@ def Index():
 @app.route('/cs6550', methods=['POST'])
 def metric():
     try:
-        file = request.files.get('file', None)
-        if not file:
+        file = request.files["file"]
+        extension = f.filename.split(".")[-1]
+
+        if not file or extension not in app.config["ALLOWED_FILE_EXTENSIONS"]:
             return 'Invalid'
 
         data = io.BytesIO()
@@ -70,7 +72,6 @@ def Code():
         path = os.path.join(base_path, "../static/assets/HW3.zip")
         return send_file(path, as_attachment=True)
     except:
-        print ("TEST")
         return jsonify({
             "error_msg": traceback.format_exc()
         })
